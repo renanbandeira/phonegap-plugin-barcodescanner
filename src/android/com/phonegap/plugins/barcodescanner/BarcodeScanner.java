@@ -34,7 +34,7 @@ import com.google.zxing.client.android.Intents;
  * @sa https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/CordovaPlugin.java
  */
 public class BarcodeScanner extends CordovaPlugin {
-    public static final int REQUEST_CODE = 0x0ba7c0de;
+    public static final int REQUEST_CODE = 0x0ba7c;
 
     private static final String SCAN = "scan";
     private static final String ENCODE = "encode";
@@ -49,6 +49,8 @@ public class BarcodeScanner extends CordovaPlugin {
     private static final String RESULTDISPLAY_DURATION = "resultDisplayDuration";
     private static final String SHOW_TORCH_BUTTON = "showTorchButton";
     private static final String TORCH_ON = "torchOn";
+    private static final String SAVE_HISTORY = "saveHistory";
+    private static final String DISABLE_BEEP = "disableSuccessBeep";
     private static final String FORMATS = "formats";
     private static final String PROMPT = "prompt";
     private static final String TEXT_TYPE = "TEXT_TYPE";
@@ -177,6 +179,9 @@ public class BarcodeScanner extends CordovaPlugin {
                         intentScan.putExtra(Intents.Scan.SHOW_FLIP_CAMERA_BUTTON, obj.optBoolean(SHOW_FLIP_CAMERA_BUTTON, false));
                         intentScan.putExtra(Intents.Scan.SHOW_TORCH_BUTTON, obj.optBoolean(SHOW_TORCH_BUTTON, false));
                         intentScan.putExtra(Intents.Scan.TORCH_ON, obj.optBoolean(TORCH_ON, false));
+                        intentScan.putExtra(Intents.Scan.SAVE_HISTORY, obj.optBoolean(SAVE_HISTORY, false));
+                        boolean beep = obj.optBoolean(DISABLE_BEEP, false);
+                        intentScan.putExtra(Intents.Scan.BEEP_ON_SCAN, !beep);
                         if (obj.has(RESULTDISPLAY_DURATION)) {
                             intentScan.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, "" + obj.optLong(RESULTDISPLAY_DURATION));
                         }
