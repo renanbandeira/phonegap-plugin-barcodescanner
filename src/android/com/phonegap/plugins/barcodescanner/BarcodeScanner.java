@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.marceloburegio.zxingplugin;
+package com.phonegap.plugins.barcodescanner;
 
 // Cordova-required packages
 import org.apache.cordova.CallbackContext;
@@ -27,14 +27,13 @@ import android.content.Intent;
 import android.util.Log;
 
 // ZXing packages
-import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ZXingPlugin extends CordovaPlugin {
+public class BarcodeScanner extends CordovaPlugin {
     private static final String CANCELLED = "cancelled";
     private static final String FORMAT = "format";
     private static final String TEXT = "text";
@@ -54,10 +53,11 @@ public class ZXingPlugin extends CordovaPlugin {
         cordova.setActivityResultCallback(this);
         try {
             JSONObject params = args.getJSONObject(0);
+            integrator.setOrientationLocked(true);
             if (params.has("prompt") && params.getString("prompt").length() > 0) integrator.setPrompt(params.getString("prompt")); // Prompt Message
             if (params.has("preferFrontCamera")) integrator.setCameraId(params.getBoolean("preferFrontCamera") ? 1 : 0); // Camera Id
-            if (params.has("disableSuccessBeep")) integrator.setBeepEnabled(!params.getBoolean("disableSuccessBeep")); // Beep Enabled
-            if (params.has("resultDisplayDuration")) integrator.setTimeout(params.getInt("resultDisplayDuration")); // Timeout
+            if (params.has("disableSuccessBeep")) integrator.setBeepEnabled(!params.optBoolean("disableSuccessBeep", true)); // Beep Enabled
+            // if (params.has("resultDisplayDuration")) integrator.setTimeout(params.getInt("resultDisplayDuration")); // Timeout
             // Scan Type
             if (params.has("scan_type")) {
                 String scanType = params.getString("scan_type");
