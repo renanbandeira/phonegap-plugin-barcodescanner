@@ -53,11 +53,10 @@ public class ZXingPlugin extends CordovaPlugin {
         cordova.setActivityResultCallback(this);
         try {
             JSONObject params = args.getJSONObject(0);
-            if (params.has("prompt_message") && params.getString("prompt_message").length() > 0) integrator.setPrompt(params.getString("prompt_message")); // Prompt Message
-            if (params.has("orientation_locked")) integrator.setOrientationLocked(params.getBoolean("orientation_locked")); // Orientation Locked
-            if (params.has("camera_id")) integrator.setCameraId(params.getInt("camera_id")); // Camera Id
-            if (params.has("beep_enabled")) integrator.setBeepEnabled(params.getBoolean("beep_enabled")); // Beep Enabled
-            if (params.has("timeout")) integrator.setTimeout(params.getInt("timeout")); // Timeout
+            if (params.has("prompt") && params.getString("prompt").length() > 0) integrator.setPrompt(params.getString("prompt")); // Prompt Message
+            if (params.has("preferFrontCamera")) integrator.setCameraId(params.getBoolean("preferFrontCamera") ? 1 : 0); // Camera Id
+            if (params.has("disableSuccessBeep")) integrator.setBeepEnabled(!params.getBoolean("disableSuccessBeep")); // Beep Enabled
+            if (params.has("resultDisplayDuration")) integrator.setTimeout(params.getInt("resultDisplayDuration")); // Timeout
             integrator.
             // Scan Type
             if (params.has("scan_type")) {
@@ -70,9 +69,12 @@ public class ZXingPlugin extends CordovaPlugin {
             // Barcode Formats
             if (params.has("formats")) {
                 ArrayList<String> formats = new ArrayList<String>();
-                String[] barcodeFormats = params.optString("formats", "").split(",");
-                if (barcodeFormats.length > 0) {
-                    integrator.setDesiredBarcodeFormats(barcodeFormats);
+                JSONArray barcodeFormats = (JSONArray) params.getJSONArray("barcode_formats");
+                if (barcodeFormats != null) {
+                    for (int i = 0; i < barcodeFormats.length(); i++) {
+                        formats.add(barcodeFormats.getString(i));
+                    }
+                    if (!formats.isEmpty()) integrator.setDesiredBarcodeFormats(formats);
                 }
             }
 
@@ -121,7 +123,7 @@ public class ZXingPlugin extends CordovaPlugin {
                     obj.put(CANCELLED, false);
                     scanCallbackContext.success(obj);
                 } catch (JSONException e) {
-                    Log.d('Code scanner', "This should never happen");
+                    Log.d("Code scanner", "This should never happen");
                 }
             }
         } else {
