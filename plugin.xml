@@ -33,6 +33,13 @@
         <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
       </feature>
     </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <activity
+    		android:name="com.journeyapps.barcodescanner.CaptureActivity"
+    		android:screenOrientation="fullSensor"
+    		tools:replace="screenOrientation"
+      />
+    </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.CAMERA"/>
       <uses-permission android:name="android.permission.FLASHLIGHT"/>
