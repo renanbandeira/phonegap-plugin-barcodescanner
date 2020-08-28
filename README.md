@@ -1,6 +1,8 @@
 # PhoneGap Plugin BarcodeScanner
 ================================
 
+## This fork uses [cordova-plugin-zxing](https://github.com/marceloburegio/cordova-plugin-zxing) for Android and BarcodeScanner for other platforms
+
 [![Build Status](https://travis-ci.org/phonegap/phonegap-plugin-barcodescanner.svg)](https://travis-ci.org/phonegap/phonegap-plugin-barcodescanner)
 
 Cross-platform BarcodeScanner for Cordova / PhoneGap.
@@ -108,7 +110,7 @@ A full example could be:
    );
 ```
 
-## Encoding a Barcode ##
+## Encoding a Barcode (iOS, Browser and Windows Phone only) ##
 
 The plugin creates the object `cordova.plugins.barcodeScanner` with the method `encode(type, data, success, fail)`.
 
