@@ -32,6 +32,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ZXingPlugin extends CordovaPlugin {
     private static final String CANCELLED = "cancelled";
@@ -57,7 +58,6 @@ public class ZXingPlugin extends CordovaPlugin {
             if (params.has("preferFrontCamera")) integrator.setCameraId(params.getBoolean("preferFrontCamera") ? 1 : 0); // Camera Id
             if (params.has("disableSuccessBeep")) integrator.setBeepEnabled(!params.getBoolean("disableSuccessBeep")); // Beep Enabled
             if (params.has("resultDisplayDuration")) integrator.setTimeout(params.getInt("resultDisplayDuration")); // Timeout
-            integrator.
             // Scan Type
             if (params.has("scan_type")) {
                 String scanType = params.getString("scan_type");
@@ -69,12 +69,9 @@ public class ZXingPlugin extends CordovaPlugin {
             // Barcode Formats
             if (params.has("formats")) {
                 ArrayList<String> formats = new ArrayList<String>();
-                JSONArray barcodeFormats = (JSONArray) params.getJSONArray("barcode_formats");
-                if (barcodeFormats != null) {
-                    for (int i = 0; i < barcodeFormats.length(); i++) {
-                        formats.add(barcodeFormats.getString(i));
-                    }
-                    if (!formats.isEmpty()) integrator.setDesiredBarcodeFormats(formats);
+                String[] barcodeFormats = params.optString("formats", "").split(",");
+                if (barcodeFormats.length > 0) {
+                    integrator.setDesiredBarcodeFormats(Arrays.asList(barcodeFormats));
                 }
             }
 
@@ -112,7 +109,7 @@ public class ZXingPlugin extends CordovaPlugin {
                     obj.put(FORMAT, "");
                     obj.put(CANCELLED, true);
                 } catch (JSONException e) {
-                    Log.d('Code scanner', "This should never happen");
+                    Log.d("Code scanner", "This should never happen");
                 }
                 //this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
                 scanCallbackContext.success(obj);
