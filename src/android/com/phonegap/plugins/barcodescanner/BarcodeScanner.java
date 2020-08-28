@@ -55,24 +55,20 @@ public class BarcodeScanner extends CordovaPlugin {
             JSONObject params = args.getJSONObject(0);
             integrator.setOrientationLocked(true);
             if (params.has("prompt") && params.getString("prompt").length() > 0) integrator.setPrompt(params.getString("prompt")); // Prompt Message
-            if (params.has("preferFrontCamera")) integrator.setCameraId(params.getBoolean("preferFrontCamera") ? 1 : 0); // Camera Id
-            if (params.has("disableSuccessBeep")) integrator.setBeepEnabled(!params.optBoolean("disableSuccessBeep", true)); // Beep Enabled
+            integrator.setCameraId(params.optBoolean("preferFrontCamera", false) ? 1 : 0); // Camera Id
+            integrator.setBeepEnabled(!params.optBoolean("disableSuccessBeep", true)); // Beep Enabled
             // if (params.has("resultDisplayDuration")) integrator.setTimeout(params.getInt("resultDisplayDuration")); // Timeout
             // Scan Type
-            if (params.has("scan_type")) {
-                String scanType = params.getString("scan_type");
-                if (scanType.equals("inverted")) integrator.addExtra("SCAN_TYPE", 1);
-                else if (scanType.equals("mixed")) integrator.addExtra("SCAN_TYPE", 2);
-                else integrator.addExtra("SCAN_TYPE", 0);
-            }
+            String scanType = params.optString("scan_type", "");
+            if (scanType.equals("inverted")) integrator.addExtra("SCAN_TYPE", 1);
+            else if (scanType.equals("mixed")) integrator.addExtra("SCAN_TYPE", 2);
+            else integrator.addExtra("SCAN_TYPE", 0);
 
             // Barcode Formats
-            if (params.has("formats")) {
-                ArrayList<String> formats = new ArrayList<String>();
-                String[] barcodeFormats = params.optString("formats", "").split(",");
-                if (barcodeFormats.length > 0) {
-                    integrator.setDesiredBarcodeFormats(Arrays.asList(barcodeFormats));
-                }
+            ArrayList<String> formats = new ArrayList<String>();
+            String[] barcodeFormats = params.optString("formats", "").split(",");
+            if (barcodeFormats.length > 0) {
+                integrator.setDesiredBarcodeFormats(Arrays.asList(barcodeFormats));
             }
 
             // Extras
